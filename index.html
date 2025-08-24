@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tessa Mae | Songwriter Studio</title>
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23D8A7B1" d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>'>
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Satisfy&family=Playfair+Display:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Quill.js Rich Text Editor CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/genai": "https://esm.sh/@google/genai@^0.8.0"
+        }
+      }
+    </script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="#" class="logo-link"><div class="logo">Tessa Mae</div></a>
+            <a href="https://tessamae.com" class="nav-link home-link" target="_blank" rel="noopener noreferrer">Home</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="songwriter" class="container">
+            <div class="songwriter-container">
+                <h2>Songwriter Studio</h2>
+                <p>Got an idea for a hit? Let's write a song together! Give me a theme, a story, or just a feeling, and I'll turn it into a musical masterpiece.</p>
+                <form id="song-form">
+                    <label for="song-prompt" class="sr-only">Your song idea or prompt</label>
+                    <textarea id="song-prompt" placeholder="e.g., 'A song about leaving a small town to chase a dream in the big city, but missing home.'" required></textarea>
+                    
+                    <div class="instrument-selector">
+                        <h4>Choose the Vibe (Optional)</h4>
+                        <div class="instrument-buttons">
+                            <button type="button" class="instrument-btn" data-instrument="Acoustic Guitar">🎸 Acoustic</button>
+                            <button type="button" class="instrument-btn" data-instrument="Electric Guitar">⚡️ Electric</button>
+                            <button type="button" class="instrument-btn" data-instrument="Piano">🎹 Piano</button>
+                            <button type="button" class="instrument-btn" data-instrument="Drums">🥁 Drums</button>
+                            <button type="button" class="instrument-btn" data-instrument="Bass">🔊 Bass</button>
+                            <button type="button" class="instrument-btn" data-instrument="Synth">🎹 Synth</button>
+                            <button type="button" class="instrument-btn" data-instrument="Strings">🎻 Strings</button>
+                        </div>
+                    </div>
+
+                    <button id="generate-song-btn" type="submit">Write My Song</button>
+                </form>
+                <div id="song-loading-indicator" style="display: none; margin-top: 1rem;">Tessa's writing...</div>
+                
+                <div id="song-output-container" style="display: none;">
+                    <h3>Our New Song!</h3>
+                    <p>Here's what I came up with. Feel free to edit the lyrics right here and make it our own.</p>
+                    <label for="song-lyrics-editor" class="sr-only">Generated song lyrics editor</label>
+                    <!-- Rich Text Editor container -->
+                    <div id="song-lyrics-editor"></div>
+                    <button id="submit-song-btn" disabled>Prepare Submission</button>
+                    <p class="royalty-note">Your song could be the next hit! If selected for publication, you'll be credited as a co-writer and receive 50% of the royalties.</p>
+                </div>
+                 <div id="songwriter-error-message" style="color: red; margin-top: 1rem;"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="social-links">
+            <a href="https://www.instagram.com/tessamaeofficial" target="_blank" aria-label="Tessa Mae on Instagram">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z" /></svg>
+            </a>
+            <a href="https://open.spotify.com/artist/5QaZEijSCxPjPf3JXNLOgq" target="_blank" aria-label="Tessa Mae on Spotify">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm4.195 14.426c-.14.246-.42.34-.666.2-.552-.312-3.15-1.92-3.645-2.196-.24-.144-.336-.36-.216-.588.12-.228.36-.312.588-.216 2.76.696 3.24 1.176 3.336 1.284.252.18.336.504.108.708zm1.185-2.58c-.18.298-.564.408-.864.228-1.08-.66-3.79-2.31-4.42-2.706-.3-.18-.42-.516-.252-.816.18-.3.516-.42.816-.252 3.12 1.836 3.75 2.292 3.87 2.388.312.228.42.648.156.96zm.264-2.82c-.228.372-.708.492-1.08.264-1.23-.78-4.59-2.79-5.28-3.21-.36-.216-.504-.648-.288-1.008.216-.36.648-.504 1.008-.288 3.03 1.836 4.98 2.976 5.16 3.096.372.228.492.708.264 1.14z"/></svg>
+            </a>
+            <a href="https://music.apple.com/us/artist/tessa-mae/1834687808" target="_blank" aria-label="Tessa Mae on Apple Music">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+            </a>
+        </div>
+        <p>&copy; 2025 Adamo Group Holdings Limited Company. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Submission Modal -->
+    <div id="submission-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <button id="close-modal-btn" class="modal-close-btn" aria-label="Close">&times;</button>
+            <h3>Submission Ready!</h3>
+            <p>Your song is ready to send. Click below to open your email app, or copy the details manually.</p>
+            
+            <div class="email-field-display">
+                <span class="field-label">To:</span>
+                <span id="email-to-display" class="field-value">aghlc.nm@gmail.com</span>
+                <button class="copy-btn" data-copy-target="email-to-display">Copy</button>
+            </div>
+            <div class="email-field-display">
+                <span class="field-label">Subject:</span>
+                <span id="email-subject-display" class="field-value"></span>
+                <button class="copy-btn" data-copy-target="email-subject-display">Copy</button>
+            </div>
+             <div class="email-field-display">
+                <span class="field-label">Body:</span>
+                <div id="email-body-display" class="field-value-multiline"></div>
+                <button class="copy-btn" data-copy-target="email-body-display">Copy</button>
+            </div>
+            
+            <p class="modal-disclaimer"><strong>Please Note:</strong> By submitting, you agree that if your song is selected for production, it will be published to Tessa Mae's music library on all major streaming platforms. You will be contacted and credited as a co-writer, receiving 50% of all publishing royalties.</p>
+
+            <a id="open-email-client-btn" class="modal-action-btn" href="#" target="_blank" rel="noopener noreferrer">Open Email App</a>
+        </div>
+    </div>
+
+
+    <!-- Quill.js Rich Text Editor JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script type="module" src="index.js"></script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
